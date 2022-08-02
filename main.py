@@ -2,7 +2,8 @@ import sys
 import pickle
 import os
 import numpy as np
-from bio_embeddings.embed import ProtTransT5BFDEmbedder
+# from bio_embeddings.embed import ProtTransT5BFDEmbedder
+import HuggingT5
 import pandas as pd
 from parse_chain_gcf import get_gcf_sequences_and_mapping
 
@@ -19,7 +20,7 @@ def unpickler(dir, chain_id):
 		return pickle.load(filehandle)
 
 if __name__=="__main__":
-	embedder = ProtTransT5BFDEmbedder()
+	embedder = HuggingT5.HuggingT5()
 	df = pd.read_csv('example_df.csv')
 	output_dir = 't5_sequence_embeddings/'
 	if not os.path.exists(output_dir):
@@ -36,7 +37,7 @@ if __name__=="__main__":
 				seq = row.sequence
 			else:
 				seq, pdb, mapping = get_gcf_sequences_and_mapping(chain_id)
-			embed_chain = np.asarray(embedder.embed(seq))
+			embed_chain = np.asarray(embedder(seq))
 			embed_dict = {
 				'sequence': seq,
 				'sequence_embedding': embed_chain
